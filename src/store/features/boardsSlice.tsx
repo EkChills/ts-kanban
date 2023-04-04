@@ -15,8 +15,11 @@ const boardSlice = createSlice({
   name:'boardSlice',
   initialState,
   reducers:{
-   
+   changeBoard:(state:InitialState, {payload}:{payload:string}) => {
+    state.selectedBoard = payload
+   }
   }
 })
 
+export const {changeBoard} = boardSlice.actions
 export default boardSlice.reducer

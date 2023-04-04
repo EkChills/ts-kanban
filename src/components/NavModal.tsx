@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import BoardOption from "./ui/BoardOption";

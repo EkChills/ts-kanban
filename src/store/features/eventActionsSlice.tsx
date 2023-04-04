@@ -4,14 +4,18 @@ interface InitialState {
   isNavModalOpen: boolean;
   isSidebarOpen: boolean;
   isBoardOpen:boolean;
+  isDetailModalOpen:boolean;
   theme:string;
+  modalParam:string;
 }
 
 const initialState:InitialState = {
   isNavModalOpen: false,
   isSidebarOpen: false,
   isBoardOpen: false,
-  theme:'light-mode'
+  isDetailModalOpen:false,
+  theme:'light-mode',
+  modalParam:''
 };
 
 
@@ -32,6 +36,12 @@ const actionsSLice = createSlice({
     closeSidebar:(state:InitialState) => {
       state.isSidebarOpen = false
     },
+    openDetailModal:(state:InitialState) => {
+      state.isDetailModalOpen = true
+    },
+    closeDetailModal:(state:InitialState) => {
+      state.isDetailModalOpen = false
+    },
     toggleTheme:(state:InitialState, {payload}:{payload:boolean}) => {
       if(payload) {
         state.theme = 'dark-mode'
@@ -51,8 +61,11 @@ const actionsSLice = createSlice({
     closeBoard:(state:InitialState) => {
       state.isBoardOpen = false
     },
+    changeModalParam:(state:InitialState, {payload}:{payload:string}) => {
+      state.modalParam = payload
+    }
   },
 });
 
-export const {changeTheme, toggleTheme, openNavModal, closeNavModal, openSidebar, closeSidebar} =  actionsSLice.actions
+export const {changeTheme, toggleTheme, openNavModal, closeNavModal, openSidebar, closeSidebar, openDetailModal, closeDetailModal, changeModalParam} =  actionsSLice.actions
 export default actionsSLice.reducer;

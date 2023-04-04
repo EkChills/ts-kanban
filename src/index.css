@@ -38,6 +38,8 @@
   --input-border: rgba(130, 143, 163, 0.25);
   --tray-color: #ffffff;
   --lines-col: #E4EBFA;
+  --subtask-text:hsl(216, 15%, 67%);
+  --select-label:#828FA3;
 }
 
 .dark-mode {
@@ -56,6 +58,8 @@
   --input-border: rgba(130, 143, 163, 0.25);
   --tray-color: #20212C;
   --lines-col: #3E3F4E;
+  --subtask-text:hsl(216, 15%, 67%);
+  --select-label:#FFFFFF;
 }
 
 

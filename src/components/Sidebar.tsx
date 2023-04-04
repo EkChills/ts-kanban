@@ -1,22 +1,29 @@
-import React from "react";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import BoardOption from "./ui/BoardOption";
 import CreateBoard from "./ui/CreateBoard";
+import logoDark from "../assets/logo-dark.svg";
+import logoLight from "../assets/logo-light.svg";
 import ToggleTheme from "./ui/ToggleTheme";
-import hideSidebar from '../assets/icon-hide-sidebar.svg'
-import { useRef } from "react";
-import useOnclickOutside from "../hooks/useOnclickOutside";
-import { closeNavModal, closeSidebar } from "../store/features/eventActionsSlice";
+import hideSidebar from "../assets/icon-hide-sidebar.svg";
+import { closeSidebar } from "../store/features/eventActionsSlice";
 
 const Sidebar = () => {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { allBoards } = useAppSelector((store) => store.allBoards);
+  const { theme } = useAppSelector((store) => store.eventsActions);
   return (
     <Wrapper
-      className={`hidden mt-[5rem] relative md:pt-[8rem] py-[1rem] md:mt-0 md:flex flex-col w-[16.5rem]  md:w-[16rem] md:border-r md:border-r-[var(--lines-col)] rounded-lg md:rounded-none h-fit md:fixed md:top-0 md:left-0 md:h-auto md:bottom-0 `}
+      className={`relative z-[90] mt-[5rem] hidden h-fit w-[16.5rem] flex-col rounded-lg py-[1rem]  md:fixed  md:bottom-0 md:left-0 md:top-0 md:mt-0 md:flex md:h-auto md:w-[16rem] md:rounded-none md:border-r md:border-r-[var(--lines-col)] `}
     >
-      <h5 className="text-[0.75rem] font-bold text-[#828FA3] uppercase tracking-[.15rem] ml-[1.5rem] mb-4">
+      <div className="mb-[5rem] ml-[1.5rem] mt-[.9rem] items-start">
+        <img
+          src={theme === "dark-mode" ? logoLight : logoDark}
+          className="hidden md:z-[80] md:block"
+          alt=""
+        />
+      </div>
+      <h5 className="mb-4 ml-[1.5rem] text-[0.75rem] font-bold uppercase tracking-[.15rem] text-[#828FA3]">
         all boards({allBoards.length})
       </h5>
       <div className="pr-[1.5rem]">
@@ -25,11 +32,16 @@ const Sidebar = () => {
         ))}
         <CreateBoard />
       </div>
-      <div className="flex md:absolute md:bottom-[6rem] md:flex-col md:space-y-8 md:w-full">
+      <div className="flex md:absolute md:bottom-[6rem] md:w-full md:flex-col md:space-y-8">
         <ToggleTheme />
-        <div className="md:flex ml-[1.5rem] hidden  space-x-[10px] cursor-pointer" onClick={() => dispatch(closeSidebar())}>
+        <div
+          className="ml-[1.5rem] hidden cursor-pointer  space-x-[10px] md:flex"
+          onClick={() => dispatch(closeSidebar())}
+        >
           <img src={hideSidebar} alt="hide-sidebar" />
-          <p className="text-[.938rem] font-bold text-[#828FA3] capitalize">hide sidebar</p>
+          <p className="text-[.938rem] font-bold capitalize text-[#828FA3]">
+            hide sidebar
+          </p>
         </div>
       </div>
     </Wrapper>
