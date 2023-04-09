@@ -6,10 +6,12 @@ import Sidebar from './components/Sidebar'
 import { changeTheme } from './store/features/eventActionsSlice'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
 import Tasks from './pages/Tasks'
+import { useLocalStorage } from './utils/useLocalStorage'
 
 const App = ():JSX.Element => {
   const {theme, isSidebarOpen} = useAppSelector((store) => store.eventsActions)
   const dispatch = useAppDispatch()
+  useLocalStorage(theme,'kanban-theme')
 
   useEffect(() => {
     window.matchMedia(`(prefers-color-scheme: dark)`)

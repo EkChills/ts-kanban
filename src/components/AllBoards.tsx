@@ -10,7 +10,7 @@ const AllBoards = ():JSX.Element => {
   
  
     return (
-      <div className="pt-[4.5rem] md:pt-[1.5rem]">
+      <div className="pt-[4.5rem] md:pt-[1.5rem] pr-[1.5rem] pb-[1.5rem]">
         <div className="flex items-center pl-[1.5rem] space-x-[2.5rem] overflow-x-scroll">
           {boardColumns.map((column, index) => <BoardColumn tasksList={tasksList} colName={column} key={index} />)}
         </div>

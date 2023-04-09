@@ -1,15 +1,26 @@
 import React from "react";
+interface Props extends React.ComponentPropsWithoutRef<any> {
+  value?:string
+  selectList:string[]
+  selectedTask?:string;
+}
 
-const SelectRow = () => {
-  const options = [
-    'todo',
-    'doing',
-    'done'
-  ]
+const SelectRow = ({ value, selectList,selectedTask, ...rest }: Props) => {
+  const options = [...selectList] || ['todo', 'doing', 'done'];
+  console.log(selectList);
+  
   return (
-    <select className="select-bordered border-[#828FA3] bg-transparent text-[var(--tasks-text)] select w-full max-w-full">
+    <select
+      {...rest}
+      value={selectedTask}
+      className="select-bordered select w-full max-w-full border-[#828FA3] bg-transparent capitalize text-[var(--tasks-text)]"
+    >
       {options.map((option, index) => {
-        return <option value={option} key={index}>{option}</option>
+        return (
+          <option  key={index} value={option} >
+            {option}
+          </option>
+        );
       })}
     </select>
   );

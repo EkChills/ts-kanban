@@ -9,7 +9,7 @@ import chevronUp from "../assets/icon-chevron-up.svg";
 import verticalEllipsis from "../assets/icon-vertical-ellipsis.svg";
 import { useAppSelector, useAppDispatch } from "../hooks/reduxHooks";
 import NavBoardModal from "./modals/NavBoardModal";
-import { openNavModal } from "../store/features/eventActionsSlice";
+import { openAddModal, openNavModal } from "../store/features/eventActionsSlice";
 const Navbar = () => {
   const { theme, isNavModalOpen, isSidebarOpen } = useAppSelector(
     (store) => store.eventsActions
@@ -49,7 +49,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex items-center space-x-[1rem] md:space-x-[1.5rem]">
-        <button className="flex h-[2rem] w-[3rem] cursor-pointer items-center justify-center rounded-full bg-[#635FC7] md:h-[3rem] md:w-[11.5rem] md:space-x-[.5rem]">
+        <button onClick={() => dispatch(openAddModal())} className="flex h-[2rem] w-[3rem] cursor-pointer items-center justify-center rounded-full bg-[#635FC7] md:h-[3rem] md:w-[11.5rem] md:space-x-[.5rem]">
           <img src={addTask} alt="add task icon" />
           <p className="hidden text-[0.938rem] font-bold capitalize text-[#ffffff] md:block">
             add new task

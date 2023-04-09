@@ -40,6 +40,8 @@
   --lines-col: #E4EBFA;
   --subtask-text:hsl(216, 15%, 67%);
   --select-label:#828FA3;
+  --placeholder-text:hsl(0,0%, 70%);
+  --edit-dropdown:#ffffff;
 }
 
 .dark-mode {
@@ -60,6 +62,8 @@
   --lines-col: #3E3F4E;
   --subtask-text:hsl(216, 15%, 67%);
   --select-label:#FFFFFF;
+  --placeholder-text:hsl(0,0%, 70%);
+  --edit-dropdown:#20212C;
 }
 
 

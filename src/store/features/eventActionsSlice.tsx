@@ -1,4 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getFromLocalStorage } from "../../utils/localStorage";
+
+type EditTaskDetails= {
+  title:string;
+  description:string;
+  subtasks: {
+    title: string;
+    isCompleted: boolean;
+}[];
+  status:string
+}
 
 interface InitialState {
   isNavModalOpen: boolean;
@@ -7,6 +18,9 @@ interface InitialState {
   isDetailModalOpen:boolean;
   theme:string;
   modalParam:string;
+  isAddModalOpen:boolean;
+  isEditModalOpen:boolean;
+  editTaskDetails:EditTaskDetails
 }
 
 const initialState:InitialState = {
@@ -14,8 +28,16 @@ const initialState:InitialState = {
   isSidebarOpen: false,
   isBoardOpen: false,
   isDetailModalOpen:false,
-  theme:'light-mode',
-  modalParam:''
+  theme:getFromLocalStorage('dark-mode', 'kanban-theme'),
+  modalParam:'',
+  isAddModalOpen:false,
+  isEditModalOpen:false,
+  editTaskDetails:{
+    description:'',
+    status:'',
+    subtasks:[],
+    title:''
+  }
 };
 
 
@@ -42,6 +64,21 @@ const actionsSLice = createSlice({
     closeDetailModal:(state:InitialState) => {
       state.isDetailModalOpen = false
     },
+    openAddModal:(state:InitialState) => {
+      state.isAddModalOpen = true
+    },
+    closeAddModal:(state:InitialState) => {
+      state.isAddModalOpen = false
+    },
+    openEditModal:(state:InitialState) => {
+      state.isEditModalOpen = true
+    },
+    closeEditModal:(state:InitialState) => {
+      state.isEditModalOpen = false
+    },
+    changeEditDetails:(state:InitialState, {payload}:{payload:EditTaskDetails}) => {
+      state.editTaskDetails = payload
+    },
     toggleTheme:(state:InitialState, {payload}:{payload:boolean}) => {
       if(payload) {
         state.theme = 'dark-mode'
@@ -67,5 +104,14 @@ const actionsSLice = createSlice({
   },
 });
 
-export const {changeTheme, toggleTheme, openNavModal, closeNavModal, openSidebar, closeSidebar, openDetailModal, closeDetailModal, changeModalParam} =  actionsSLice.actions
+export const {changeTheme, toggleTheme, openNavModal, closeNavModal, openSidebar, closeSidebar, 
+  openDetailModal, 
+  closeDetailModal, 
+  changeModalParam,
+  openAddModal,
+  closeAddModal,
+  openEditModal,
+  closeEditModal,
+  changeEditDetails
+} =  actionsSLice.actions
 export default actionsSLice.reducer;
