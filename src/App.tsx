@@ -1,5 +1,6 @@
 import { useEffect} from 'react'
 import styled from 'styled-components'
+import  ReactDOM  from 'react-dom'
 import AllBoards from './components/AllBoards'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
@@ -7,9 +8,12 @@ import { changeTheme } from './store/features/eventActionsSlice'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
 import Tasks from './pages/Tasks'
 import { useLocalStorage } from './utils/useLocalStorage'
+import AddNewBoard from './pages/AddNewBoard'
+import EditBoard from './pages/EditBoard'
 
 const App = ():JSX.Element => {
   const {theme, isSidebarOpen} = useAppSelector((store) => store.eventsActions)
+  const {isAddBoardModal, isEditBoardModal} = useAppSelector((store) => store.eventsActions)
   const dispatch = useAppDispatch()
   useLocalStorage(theme,'kanban-theme')
 
@@ -38,6 +42,8 @@ const App = ():JSX.Element => {
     <>
       <Navbar />
       {isSidebarOpen && <Sidebar />}
+      {isAddBoardModal && ReactDOM.createPortal(<AddNewBoard />, document.getElementById('modal') as Element | DocumentFragment)}
+      {isEditBoardModal && ReactDOM.createPortal(<EditBoard />, document.getElementById('modal') as Element | DocumentFragment)}
       <Tasks />
     </>
   )

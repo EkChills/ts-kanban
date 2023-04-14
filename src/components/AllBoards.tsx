@@ -1,5 +1,8 @@
-import { useAppSelector } from "../hooks/reduxHooks"
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks"
 import BoardColumn from "./BoardColumn";
+import { setEditedBoardInfo } from "../store/features/boardsSlice";
+
 
 
 
@@ -7,6 +10,12 @@ const AllBoards = ():JSX.Element => {
   const {allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
   const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
   const boardColumns = [...new Set(tasksList?.columns.map((item) => item.name))]
+  const dispatch = useAppDispatch()
+  // let coo = tasksList?.columns
+
+  useEffect(() => {
+    dispatch(setEditedBoardInfo({id:tasksList!.id, name:tasksList!.name, columns:tasksList!.columns}))
+  },[selectedBoard])
   
  
     return (

@@ -11,6 +11,7 @@ import { changeEditDetails, closeDetailModal, openEditModal } from "../store/fea
 import EditTask from "./EditTask";
 
 interface Props {
+  id:number | string
   title: string;
   description: string;
   status: string;
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const SingleTaskDetails = ({
+  id,
   title,
   description,
   status,
@@ -54,6 +56,7 @@ const SingleTaskDetails = ({
 
   useEffect(() => {
     dispatch(changeEditDetails({
+      id:id,
       description:description,
       status:status,
       subtasks:subtasks,

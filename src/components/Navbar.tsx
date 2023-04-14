@@ -9,7 +9,10 @@ import chevronUp from "../assets/icon-chevron-up.svg";
 import verticalEllipsis from "../assets/icon-vertical-ellipsis.svg";
 import { useAppSelector, useAppDispatch } from "../hooks/reduxHooks";
 import NavBoardModal from "./modals/NavBoardModal";
-import { openAddModal, openNavModal } from "../store/features/eventActionsSlice";
+import { openAddModal, openEditBoard, openNavModal } from "../store/features/eventActionsSlice";
+import { RefObject, useRef, useState } from "react";
+import useOnclickOutside from "../hooks/useOnclickOutside";
+
 const Navbar = () => {
   const { theme, isNavModalOpen, isSidebarOpen } = useAppSelector(
     (store) => store.eventsActions
@@ -19,6 +22,13 @@ const Navbar = () => {
   const portalCont = document.getElementById("modal") as
     | Element
     | DocumentFragment;
+  const [showEditDropdown, setShowEditDropdown] = useState<boolean>(false)
+  const editDropdownRef = useRef(null)  
+  useOnclickOutside(editDropdownRef, () => setShowEditDropdown(false))
+
+  const handleOpenEdit = () => {
+    setShowEditDropdown(true)
+  }
 
   return (
     <Wrapper
@@ -48,14 +58,24 @@ const Navbar = () => {
           />
         </div>
       </div>
-      <div className="flex items-center space-x-[1rem] md:space-x-[1.5rem]">
+      <div className="flex items-center relative space-x-[1rem] md:space-x-[1.5rem]">
         <button onClick={() => dispatch(openAddModal())} className="flex h-[2rem] w-[3rem] cursor-pointer items-center justify-center rounded-full bg-[#635FC7] md:h-[3rem] md:w-[11.5rem] md:space-x-[.5rem]">
           <img src={addTask} alt="add task icon" />
           <p className="hidden text-[0.938rem] font-bold capitalize text-[#ffffff] md:block">
             add new task
           </p>
         </button>
-        <img className="" src={verticalEllipsis} alt="ellipsis hamburger" />
+        <img className="cursor-pointer" src={verticalEllipsis} onClick={handleOpenEdit} alt="ellipsis hamburger" />
+        {showEditDropdown && <div ref={editDropdownRef} className="absolute right-[2rem] top-[3rem] min-w-[160px] w-full max-w-[192px] rounded-md bg-[var(--edit-dropdown)] p-4 ">
+              <div className="flex flex-col space-y-4">
+                <span className="text-[.813rem] cursor-pointer font-[500] text-[#828FA3]" onClick={() => dispatch(openEditBoard())} >
+                  Edit Board
+                </span>
+                <span className="text-[.813rem] font-[500] text-[#EA5555]">
+                  Delete Task
+                </span>
+              </div>
+            </div>}
       </div>
       {isNavModalOpen && ReactDOM.createPortal(<NavBoardModal />, portalCont)}
     </Wrapper>
@@ -83,7 +103,6 @@ background-color: var(--nav-bcg);
   .logo-line {
     left:15rem;
   } */
-}
-`;
+`
 
 export default Navbar;

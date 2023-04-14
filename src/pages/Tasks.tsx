@@ -8,21 +8,19 @@ import AddTask from './AddTask'
 import  ReactDOM  from 'react-dom'
 import { useLocalStorage } from '../utils/useLocalStorage'
 import EditTask from './EditTask'
+import AddNewBoard from './AddNewBoard'
 
 
 const Tasks = () => {
-  const {isSidebarOpen,isAddModalOpen, isEditModalOpen, isDetailModalOpen} = useAppSelector((store) => store.eventsActions)
+  const {isSidebarOpen,isAddModalOpen, isEditModalOpen, isAddBoardModal} = useAppSelector((store) => store.eventsActions)
   const {allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
   useLocalStorage(allBoards, 'allTasks')
   const singleBoard = allBoards.find((task) => task.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
-  let tasksLength = singleBoard?.columns.reduce((total, task) => {
-    if(task.tasks.length > 0) {
-      return task.tasks.length + total
-    }
-    return total
-  }, 0)
+  let colName = singleBoard?.columns.map((col) => col.name)
+  
+  
 
-  if(tasksLength! <= 0) {
+  if(colName?.length! <= 0) {
     return <EmptyBoard />
   }
 

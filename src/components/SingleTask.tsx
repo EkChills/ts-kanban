@@ -5,6 +5,7 @@ import { changeModalParam, closeEditModal, openDetailModal } from '../store/feat
 import EditTask from '../pages/EditTask';
 
 interface Props  {
+  id:number | string;
   title: string;
   description: string;
   status: string;
@@ -14,7 +15,7 @@ interface Props  {
   }[];
 }
 
-const SingleTask = ({title, description, status, subtasks}:Props) => {
+const SingleTask = ({id,title, description, status, subtasks}:Props) => {
   const dispatch = useAppDispatch()
   const {isDetailModalOpen,modalParam, isEditModalOpen} = useAppSelector((store) => store.eventsActions)
   const completedSubtasks = subtasks.reduce((total, item) => {
@@ -34,7 +35,7 @@ const SingleTask = ({title, description, status, subtasks}:Props) => {
         <h5 className='text-[.938rem] font-bold text-[var(--tasks-text)]'>{title}</h5>
         <p className='text-[.75rem] font-bold text-[#828FA3]'>{`${completedSubtasks} of ${subtasks.length} subtasks`}</p>
       </div>
-      { isDetailModalOpen && title === modalParam && ReactDOM.createPortal(<SingleTaskDetails title={title} description={description} completedSubtasks={completedSubtasks} status={status} subtasks={subtasks} />, document.getElementById('modal') as Element | DocumentFragment)}
+      { isDetailModalOpen && title === modalParam && ReactDOM.createPortal(<SingleTaskDetails id={id}  title={title} description={description} completedSubtasks={completedSubtasks} status={status} subtasks={subtasks} />, document.getElementById('modal') as Element | DocumentFragment)}
     </div>
   )
 }

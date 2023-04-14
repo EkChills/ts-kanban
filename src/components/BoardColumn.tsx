@@ -10,6 +10,7 @@ type TaskList =
       columns: {
         name: string;
         tasks: {
+          id:number | string;
           title: string;
           description: string;
           status: string;

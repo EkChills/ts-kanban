@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import {v4 as uuid} from 'uuid'
 import ModalOverlay from "../components/ui/ModalOverlay";
 import BoardBcg from "../components/ui/BoardBcg";
 import { useRef } from "react";
@@ -20,7 +21,11 @@ const AddTask = (): JSX.Element => {
     description:'',
     status:boardColumns[0]
   })
-  const [subtaskList, setSubtaskList] = useState<string[]>(['n'])
+  const [subtaskList, setSubtaskList] = useState<{
+    id:number | string
+    title: string;
+    isCompleted: boolean;
+}[]>([{id:uuid(), isCompleted:false, title:''}])
   const [subtasksValue, setSubtaskValue] = useState({})
   const boardRef = useRef<Element>(null);
   const dispatch = useAppDispatch();
@@ -36,43 +41,39 @@ const AddTask = (): JSX.Element => {
     setFormInputs((prevInputs) => ({...prevInputs, [name]:value}))    
   }
 
-  const onSubtaskChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const onSubtaskChange = (e:React.ChangeEvent<HTMLInputElement>, index:number) => {
     const {name, value} = e.target
-    setSubtaskValue(prev => ({...prev, [name]:value}))
+    const newValues = [...subtaskList]
+    newValues[index].title = value
+    setSubtaskList(newValues)
   }
   
 
   const addSubtask = () => {
-    const index = subtaskList.length - 1
-    const newTaskName = subtaskList[index] + 'n'
-    setSubtaskList((prevTasks) => [...prevTasks, newTaskName])
+    const lastIndex = subtaskList.length - 1
+    setSubtaskList(prevList => [...prevList, {id:lastIndex + 1 , isCompleted:false, title:"add new"}])
   }
 
-  const removeSubtask = (title:string) => {
-    setSubtaskList((prevSubtask) => prevSubtask.filter((item) => item !== title))
-    setSubtaskValue((prev:any) => {
-      return delete prev[title]
-    })
+  const removeSubtask = (title:number | string) => {
+    setSubtaskList(subtaskList.filter((listItem) => listItem.id !== title))
   }
 
-  console.log(formInputs);
-  
-    
-  
 
   interface SingleTask {
+    id:number | string;
     title: string;
     description: string;
     status: string;
     subtasks: {
+        id:number | string
         title: string;
         isCompleted: boolean;
     }[];
   }
   
   const onSubmitHandler = ()=> {
-  const subtaskInput = Object.values(subtasksValue).map((subtask) => ({title:subtask as string, isCompleted:false}))  
-    dispatch(addNewTask({colName:formInputs.status, singleTask:{title:formInputs.title, description:formInputs.description, status:formInputs.status,subtasks:[...subtaskInput]} }))
+  const subtaskInput = Object.values(subtasksValue).map((subtask) => ({id:uuid(), title:subtask as string, isCompleted:false}))  
+    dispatch(addNewTask({colName:formInputs.status, singleTask:{id:uuid(), title:formInputs.title, description:formInputs.description, status:formInputs.status,subtasks:[...subtaskList]} }))
     dispatch(closeAddModal())
   }
   
@@ -117,10 +118,10 @@ const AddTask = (): JSX.Element => {
                     <div key={index} className="flex items-center space-x-4">
                     <input
                       placeholder={"e.g. Make coffee"}
-                      className={`input-bordered input w-full  max-w-full border-[#828FA3] bg-transparent py-[.5rem] text-[var(--board-text)] placeholder:text-[.813rem] ${errors[subtask] ? 'border-[#EA5555] border' : ''}  `}
-                      {...register(`${subtask}`, {required:true, onChange:(e:React.ChangeEvent<HTMLInputElement>) => onSubtaskChange(e)})}
+                      className={`input-bordered input w-full  max-w-full border-[#828FA3] bg-transparent py-[.5rem] text-[var(--board-text)] placeholder:text-[.813rem] ${errors[subtask.title.trim().toLowerCase()] ? 'border-[#EA5555] border' : ''}  `}
+                      {...register(`${index}`, {required:true, onChange:(e:React.ChangeEvent<HTMLInputElement>) => onSubtaskChange(e, index)})}
                     ></input>
-                    <img src={cancel} onClick={() => removeSubtask(subtask)} alt="cancel" />
+                    <img src={cancel} onClick={() => removeSubtask(subtask.id)} alt="cancel" />
                   </div>
                   )
                 })}

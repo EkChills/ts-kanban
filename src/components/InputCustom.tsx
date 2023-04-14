@@ -30,7 +30,7 @@ const InputCustom = React.forwardRef(({
       </label>
       <Element
         placeholder={placeholderText}
-        className={`${className} placeholder:text-[.813rem]`}
+        className={`${className} placeholder:text-[.813rem] text-[.813rem] font-[500]`}
         {...rest}
       ></Element>
     </div>

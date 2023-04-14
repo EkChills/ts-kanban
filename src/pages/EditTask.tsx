@@ -9,8 +9,8 @@ import InputCustom from "../components/InputCustom";
 import cancel from "../assets/icon-cross.svg";
 import {useForm} from 'react-hook-form'
 import SelectRow from "../components/ui/SelectRow";
-import { addNewTask } from "../store/features/boardsSlice";
-import { Id } from "react-toastify";
+import { addNewTask, editTask } from "../store/features/boardsSlice";
+import {v4 as uuid} from 'uuid'
 
 interface Props {
   title:string;
@@ -24,13 +24,13 @@ interface Props {
 
 const EditTask = (): JSX.Element => {
   const {allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
-  const {editTaskDetails:{description,status,subtasks,title}} = useAppSelector((store) => store.eventsActions)
+  const {editTaskDetails:{id, description,status,subtasks,title}} = useAppSelector((store) => store.eventsActions)
   const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
   const boardColumns = [...new Set(tasksList?.columns.map((item) => item.name))]
   const [formInputs, setFormInputs] = useState<{title:string, description:string, status:string}>({
     title:title,
     description:description,
-    status:status
+    status:boardColumns[0]
   })
   const newArray = Array.from({length:subtasks.length}, (item, index) => '' + 'n' + index)
   const newArrangedSubtask = subtasks.map((taskItem, index) => ({...taskItem, id:index}))
@@ -50,10 +50,23 @@ const EditTask = (): JSX.Element => {
     setFormInputs((prevInputs) => ({...prevInputs, [name]:value}))    
   }
 
-  const onSubtaskChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const onSubtaskChange = (e:React.ChangeEvent<HTMLInputElement>, index:number) => {
     const {name, value} = e.target
-    setSubtaskValue(prev => ({...prev, [name]:value}))
+    const newValues = [...subtaskList]
+    newValues[index].title = value
+    setSubtaskList(newValues)
+    // console.log(value);
+    
+    // setSubtaskValue(prev => ({...prev, [name]:value}))
+    // // const recentObj = {title: subtaskList[index].title, isCompleted:false, id:index}
+    // setSubtaskList((prevList) => prevList.map((item) => {
+    //   if(item.id === index) {
+    //     return {id:index, isCompleted:false, title:value}
+    //   }
+    //   return item
+    // })) 
   }
+  console.log(subtaskList);
   
 
   const addSubtask = () => {
@@ -62,7 +75,7 @@ const EditTask = (): JSX.Element => {
   }
 
   const removeSubtask = (title:number) => {
-    setSubtaskList(subtaskList.filter((listItem) => listItem.id != title))
+    setSubtaskList(subtaskList.filter((listItem) => listItem.id !== title))
   }
 
 
@@ -84,11 +97,12 @@ const EditTask = (): JSX.Element => {
   useEffect(() => {
     dispatch(closeDetailModal())
   })
+
+  
   
   const onSubmitHandler = ()=> {
-  const subtaskInput = Object.values(subtasksValue).map((subtask) => ({title:subtask as string, isCompleted:false}))  
-    dispatch(addNewTask({colName:formInputs.status, singleTask:{title:formInputs.title, description:formInputs.description, status:formInputs.status,subtasks:[...subtaskInput]} }))
-    dispatch(closeAddModal())
+    dispatch(editTask({id:id,title:formInputs.title, description:formInputs.description, status:formInputs.status, subtasks:subtaskList}))
+    dispatch(closeEditModal())
   }
   
 
@@ -133,8 +147,9 @@ const EditTask = (): JSX.Element => {
                     <div key={index} className="flex items-center space-x-4">
                     <input
                       placeholder={subtask.title}
-                      className={`input-bordered input w-full  max-w-full border-[#828FA3] bg-transparent py-[.5rem] text-[var(--board-text)] placeholder:text-[.813rem] ${errors[subtask.title.trim().toLowerCase()] ? 'border-[#EA5555] border' : ''}  `}
-                      {...register(`${subtask.title.trim().toLowerCase()}`, {required:true, onChange:(e:React.ChangeEvent<HTMLInputElement>) => onSubtaskChange(e)})}
+                      className={`input-bordered input w-full  max-w-full border-[#828FA3] bg-transparent py-[.5rem] text-[var(--board-text)] text-[.813rem] font-[500] placeholder:text-[.813rem] ${errors[subtask.title.trim().toLowerCase()] ? 'border-[#EA5555] border' : ''}  `}
+                      {...register(`${index}` , {required:true, onChange:(e:React.ChangeEvent<HTMLInputElement>) => onSubtaskChange(e, subtask.id)})}
+                      value={subtask.title}
                     ></input>
                     <img src={cancel} onClick={() => removeSubtask(id)} alt="cancel" />
                   </div>
@@ -156,7 +171,7 @@ const EditTask = (): JSX.Element => {
           </div>
           <button type="submit" className="flex items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">
                 <p className="text-[.813rem] font-bold capitalize text-[#ffffff]">
-                  Create Task
+                  save changes
                 </p>
               </button>
         </form>

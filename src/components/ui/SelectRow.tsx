@@ -7,7 +7,6 @@ interface Props extends React.ComponentPropsWithoutRef<any> {
 
 const SelectRow = ({ value, selectList,selectedTask, ...rest }: Props) => {
   const options = [...selectList] || ['todo', 'doing', 'done'];
-  console.log(selectList);
   
   return (
     <select
