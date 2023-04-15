@@ -4,6 +4,7 @@ import ModalOverlay from "../components/ui/ModalOverlay";
 import BoardBcg from "../components/ui/BoardBcg";
 import { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import {PuffLoader} from 'react-spinners'
 import useOnclickOutside from "../hooks/useOnclickOutside";
 import { closeAddBoardModal, closeAddModal, closeEditBoard } from "../store/features/eventActionsSlice";
 import InputCustom from "../components/InputCustom";
@@ -11,9 +12,11 @@ import cancel from "../assets/icon-cross.svg";
 import {useForm} from 'react-hook-form'
 import { Tasks } from "../store/features/boardsSlice";
 import { addBoard, addNewTask, editBoard } from "../store/features/boardsSlice";
+import { toast } from "react-toastify";
 
 const EditBoard = (): JSX.Element => {
   const {allBoards, selectedBoard, editedBoardInfo} = useAppSelector((store) => store.allBoards)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const boardRef = useRef<RefObject<HTMLElement> | null>(null)
   const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
   const dispatch = useAppDispatch()
@@ -23,7 +26,7 @@ const EditBoard = (): JSX.Element => {
     tasks:Tasks
   }[]>(editedBoardInfo.columns)
   const {formState:{errors}, register, handleSubmit} = useForm()
-  useOnclickOutside(boardRef, () => dispatch(closeAddBoardModal()))
+  useOnclickOutside(boardRef, () => dispatch(closeEditBoard()))
   const [boardNameInput, setBoardNameInput] = useState<string>(editedBoardInfo.name)
 
   type BoardColumn = {
@@ -52,10 +55,27 @@ const EditBoard = (): JSX.Element => {
   const addBoardColumn = () => {
     setBoardColumns(prev => [...prev, {id:uuid(), name:"", tasks:[]}])
   }
+
+  const dummyFetch = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve('resolved'), 2000)
+    })
+  }
+  
  
-  const onSubmitHandler = () => {
-    dispatch(editBoard({...editedBoardInfo, name:boardNameInput!, columns:boardColumns}))
-    dispatch(closeEditBoard())
+  const onSubmitHandler = async() => {
+    try {
+      setIsLoading(true)
+      await dummyFetch()
+      dispatch(editBoard({...editedBoardInfo, name:boardNameInput!, columns:boardColumns}))
+      dispatch(closeEditBoard())
+      toast.success('Column Added')
+    } catch (error) {
+      
+    }
+    finally {
+      setIsLoading(false)
+    }
   }
 
   
@@ -99,17 +119,18 @@ const EditBoard = (): JSX.Element => {
                   )
                 })}
             
-              <button type="button" onClick={addBoardColumn} className="flex items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
+              <button type="button" onClick={addBoardColumn} className="flex btn items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
                 <p className="text-[.813rem] font-bold capitalize text-[#635FC7]">
                   + add new column
                 </p>
               </button>
             </div>
           </div>
-          <button type="submit" className="flex items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">
+          <button type="submit" className="flex btn items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">
+            {isLoading ? <PuffLoader size={27} color="#ffffff" /> :
                 <p className="text-[.813rem] font-bold capitalize text-[#ffffff]">
                   save changes
-                </p>
+                </p>}
               </button>
         </form>
       </BoardBcg>

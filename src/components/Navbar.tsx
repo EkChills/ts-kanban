@@ -9,15 +9,16 @@ import chevronUp from "../assets/icon-chevron-up.svg";
 import verticalEllipsis from "../assets/icon-vertical-ellipsis.svg";
 import { useAppSelector, useAppDispatch } from "../hooks/reduxHooks";
 import NavBoardModal from "./modals/NavBoardModal";
-import { openAddModal, openEditBoard, openNavModal } from "../store/features/eventActionsSlice";
+import { openAddModal, openDeleteBoardModal, openEditBoard, openNavModal } from "../store/features/eventActionsSlice";
 import { RefObject, useRef, useState } from "react";
 import useOnclickOutside from "../hooks/useOnclickOutside";
+import { deleteBoard } from "../store/features/boardsSlice";
 
 const Navbar = () => {
   const { theme, isNavModalOpen, isSidebarOpen } = useAppSelector(
     (store) => store.eventsActions
   );
-  const { selectedBoard } = useAppSelector((store) => store.allBoards);
+  const { selectedBoard, editedBoardInfo } = useAppSelector((store) => store.allBoards);
   const dispatch = useAppDispatch();
   const portalCont = document.getElementById("modal") as
     | Element
@@ -28,6 +29,10 @@ const Navbar = () => {
 
   const handleOpenEdit = () => {
     setShowEditDropdown(true)
+  }
+
+  const deleteSelectedBoard = () => {
+    dispatch(openDeleteBoardModal())
   }
 
   return (
@@ -59,7 +64,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className="flex items-center relative space-x-[1rem] md:space-x-[1.5rem]">
-        <button onClick={() => dispatch(openAddModal())} className="flex h-[2rem] w-[3rem] cursor-pointer items-center justify-center rounded-full bg-[#635FC7] md:h-[3rem] md:w-[11.5rem] md:space-x-[.5rem]">
+        <button onClick={() => dispatch(openAddModal())} className="flex btn h-[2rem] w-[3rem] cursor-pointer items-center justify-center rounded-full bg-[#635FC7] md:h-[3rem] md:w-[11.5rem] md:space-x-[.5rem]">
           <img src={addTask} alt="add task icon" />
           <p className="hidden text-[0.938rem] font-bold capitalize text-[#ffffff] md:block">
             add new task
@@ -71,8 +76,8 @@ const Navbar = () => {
                 <span className="text-[.813rem] cursor-pointer font-[500] text-[#828FA3]" onClick={() => dispatch(openEditBoard())} >
                   Edit Board
                 </span>
-                <span className="text-[.813rem] font-[500] text-[#EA5555]">
-                  Delete Task
+                <span onClick={deleteSelectedBoard} className="text-[.813rem] cursor-pointer font-[500] text-[#EA5555]">
+                  Delete board
                 </span>
               </div>
             </div>}

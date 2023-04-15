@@ -173,8 +173,14 @@ const boardSlice = createSlice({
         // console.log(state.allBoards);
 
     },
+    deleteBoard:(state:InitialState, {payload}:{payload:BoardColumn}) => {
+      let newBoards = [...state.allBoards]
+      newBoards = newBoards.filter((board) => board.id !== payload.id)
+      state.allBoards = [...newBoards]
+      state.selectedBoard = state.allBoards[0].name
+    },
   },
 });
 
-export const { changeBoard, addNewTask, editTask, addBoard, editBoard, setEditedBoardInfo, deleteTask } = boardSlice.actions;
+export const { changeBoard, addNewTask, editTask, addBoard, editBoard, setEditedBoardInfo, deleteTask, deleteBoard } = boardSlice.actions;
 export default boardSlice.reducer;

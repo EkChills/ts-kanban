@@ -4,28 +4,28 @@ import BoardColumn from "./BoardColumn";
 import { deleteTask, setEditedBoardInfo } from "../store/features/boardsSlice";
 import DeleteModal from "./modals/DeleteModal";
 import ReactDOM from 'react-dom'
-import { closeDeleteTaskModal } from "../store/features/eventActionsSlice";
+import { closeDeleteBoardModal, closeDeleteTaskModal } from "../store/features/eventActionsSlice";
 import { toast } from "react-toastify";
 
 
 
 
 const AllBoards = ():JSX.Element => {
-  const {allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
+  const {allBoards, selectedBoard, editedBoardInfo} = useAppSelector((store) => store.allBoards)
   const {isDeleteTaskModalOpen, editTaskDetails} = useAppSelector((store) => store.eventsActions)
-  const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
+  const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase()) || allBoards[0]
   const boardColumns = [...new Set(tasksList?.columns.map((item) => item.name))]
   const dispatch = useAppDispatch()
   // let coo = tasksList?.columns
 
   useEffect(() => {
     dispatch(setEditedBoardInfo({id:tasksList!.id, name:tasksList!.name, columns:tasksList!.columns}))
-  },[selectedBoard])
+  },[selectedBoard, setEditedBoardInfo])
 
   const deleteFunc = () => {
+    dispatch(closeDeleteTaskModal())
     dispatch(deleteTask(editTaskDetails))
     toast.success('the task has been successfully removed')
-    dispatch(closeDeleteTaskModal())
   }
   
  

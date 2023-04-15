@@ -5,17 +5,19 @@ import AllBoards from './components/AllBoards'
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
-import { changeTheme } from './store/features/eventActionsSlice'
+import { changeTheme, closeDeleteBoardModal } from './store/features/eventActionsSlice'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import Tasks from './pages/Tasks'
 import { useLocalStorage } from './utils/useLocalStorage'
 import AddNewBoard from './pages/AddNewBoard'
 import EditBoard from './pages/EditBoard'
+import DeleteModal from './components/modals/DeleteModal';
+import { changeBoard, deleteBoard } from './store/features/boardsSlice';
 
 const App = ():JSX.Element => {
-  const {theme, isSidebarOpen} = useAppSelector((store) => store.eventsActions)
-  const {isAddBoardModal, isEditBoardModal} = useAppSelector((store) => store.eventsActions)
+  const {editedBoardInfo, allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
+  const {isAddBoardModal, isEditBoardModal, isDeleteBoardModalOpen,theme, isSidebarOpen} = useAppSelector((store) => store.eventsActions)
   const dispatch = useAppDispatch()
   useLocalStorage(theme,'kanban-theme')
 
@@ -39,6 +41,18 @@ const App = ():JSX.Element => {
     document.body.className = theme
   },[theme])
 
+  const deleteBoardFunc = () => {
+    const allBoardNames = allBoards.map((board) => board.name.trim().toLowerCase())
+    
+    // const boardNameSet = [...new Set(...allBoardNames)]
+    // let currentBoardInd = boardNameSet.indexOf(selectedBoard.trim().toLowerCase())
+    // let changedBoard = boardNameSet[currentBoardInd + 1]
+    
+    dispatch(closeDeleteBoardModal())
+    // dispatch(changeBoard(changedBoard))
+    dispatch(deleteBoard(editedBoardInfo))
+    toast.success('Board deleted successfully')
+  }
 
   return (
     <>
@@ -46,6 +60,7 @@ const App = ():JSX.Element => {
       {isSidebarOpen && <Sidebar />}
       {isAddBoardModal && ReactDOM.createPortal(<AddNewBoard />, document.getElementById('modal') as Element | DocumentFragment)}
       {isEditBoardModal && ReactDOM.createPortal(<EditBoard />, document.getElementById('modal') as Element | DocumentFragment)}
+      {isDeleteBoardModalOpen && ReactDOM.createPortal(<DeleteModal deleteFunc={deleteBoardFunc} deleteFor="board" boardName={editedBoardInfo.name} />, document.getElementById('modal') as HTMLElement )}
       <Tasks />
       <ToastContainer position='top-center' />
     </>

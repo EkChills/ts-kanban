@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FormEvent, RefObject, useState } from "react";
+import React, { RefObject, useState } from "react";
+import {PuffLoader} from 'react-spinners'
 import {v4 as uuid} from 'uuid'
 import ModalOverlay from "../components/ui/ModalOverlay";
 import BoardBcg from "../components/ui/BoardBcg";
@@ -11,8 +12,10 @@ import cancel from "../assets/icon-cross.svg";
 import {useForm} from 'react-hook-form'
 import SelectRow from "../components/ui/SelectRow";
 import { addBoard, addNewTask } from "../store/features/boardsSlice";
+import { toast } from "react-toastify";
 
 const AddNewBoard = (): JSX.Element => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const {allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
   const boardRef = useRef<RefObject<HTMLElement> | null>(null)
   const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
@@ -52,10 +55,27 @@ const AddNewBoard = (): JSX.Element => {
   const addBoardColumn = () => {
     setBoardColumns(prev => [...prev, {id:uuid(), name:"", tasks:[]}])
   }
+
+  const dummyFetch = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve('resolved'), 2000)
+    })
+  }
  
-  const onSubmitHandler = () => {
-    dispatch(addBoard({id:uuid(), name:boardNameInput!, columns:[...boardColumns]}))
-    dispatch(closeAddBoardModal())
+  const onSubmitHandler = async() => {
+    try {
+      setIsLoading(true)
+      await dummyFetch()
+      dispatch(addBoard({id:uuid(), name:boardNameInput!, columns:[...boardColumns]}))
+      dispatch(closeAddBoardModal())
+      toast.success('Board created successfully')
+    } catch (error) {
+      console.log(error);
+      
+    }
+    finally {
+      setIsLoading(false)
+    }
   }
 
   
@@ -93,22 +113,23 @@ const AddNewBoard = (): JSX.Element => {
                       className={`input-bordered input w-full  max-w-full border-[#828FA3] bg-transparent py-[.5rem] text-[var(--board-text)] placeholder:text-[.813rem] ${errors[`${index}`] ? 'border-[#EA5555] border' : ''}  `}
                       {...register(`${index}`, {required:true, onChange:(e:React.ChangeEvent<HTMLInputElement>) => onBoardColumnChange(e, index)})}
                     ></input>
-                    <img src={cancel} onClick={() => removeBoard(column.id)} alt="cancel" />
+                    <img src={cancel} onClick={() => removeBoard(column.id)} alt="cancel" className="cursor-pointer" />
                   </div>
                   )
                 })}
             
-              <button type="button" onClick={addBoardColumn} className="flex items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
+              <button type="button" onClick={addBoardColumn} className="flex btn items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
                 <p className="text-[.813rem] font-bold capitalize text-[#635FC7]">
-                  + add new subtask
+                  + add new column
                 </p>
               </button>
             </div>
           </div>
-          <button type="submit" className="flex items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">
+          <button type="submit" className="flex btn items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">
+            {isLoading ? <PuffLoader size={27} color="#ffffff"  /> :
                 <p className="text-[.813rem] font-bold capitalize text-[#ffffff]">
-                  Create Task
-                </p>
+                  Create new board
+                </p>}
               </button>
         </form>
       </BoardBcg>

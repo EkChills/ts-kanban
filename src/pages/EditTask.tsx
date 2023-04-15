@@ -4,13 +4,15 @@ import BoardBcg from "../components/ui/BoardBcg";
 import { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import useOnclickOutside from "../hooks/useOnclickOutside";
-import { closeAddModal, closeDetailModal, closeEditModal } from "../store/features/eventActionsSlice";
+import {  closeDetailModal, closeEditModal } from "../store/features/eventActionsSlice";
+import {PuffLoader} from 'react-spinners'
 import InputCustom from "../components/InputCustom";
 import cancel from "../assets/icon-cross.svg";
 import {useForm} from 'react-hook-form'
 import SelectRow from "../components/ui/SelectRow";
 import { addNewTask, editTask } from "../store/features/boardsSlice";
 import {v4 as uuid} from 'uuid'
+import { toast } from "react-toastify";
 
 interface Props {
   title:string;
@@ -24,6 +26,7 @@ interface Props {
 
 const EditTask = (): JSX.Element => {
   const {allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const {editTaskDetails:{id, description,status,subtasks,title}} = useAppSelector((store) => store.eventsActions)
   const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
   const boardColumns = [...new Set(tasksList?.columns.map((item) => item.name))]
@@ -96,13 +99,28 @@ const EditTask = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(closeDetailModal())
-  })
+  },[])
 
+  const dummyFetch = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve('resolved'), 2000)
+    })
+  }
   
-  
-  const onSubmitHandler = ()=> {
-    dispatch(editTask({id:id,title:formInputs.title, description:formInputs.description, status:formInputs.status, subtasks:subtaskList}))
-    dispatch(closeEditModal())
+  const onSubmitHandler = async()=> {
+    try {
+      setIsLoading(true)
+      await dummyFetch()
+      dispatch(editTask({id:id,title:formInputs.title, description:formInputs.description, status:formInputs.status, subtasks:subtaskList}))
+      dispatch(closeEditModal())
+      toast.success('Changes Saved')
+    } catch (error) {
+      console.log(error);
+      
+    }
+    finally {
+      setIsLoading(false)
+    }
   }
   
 
@@ -156,7 +174,7 @@ const EditTask = (): JSX.Element => {
                   )
                 })}
             
-              <button type="button" onClick={addSubtask} className="flex items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
+              <button type="button" onClick={addSubtask} className="flex btn items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
                 <p className="text-[.813rem] font-bold capitalize text-[#635FC7]">
                   + add new subtask
                 </p>
@@ -169,10 +187,11 @@ const EditTask = (): JSX.Element => {
             </label>
           <SelectRow selectList={boardColumns} value={formInputs.status}  name="status" onChange={handleChange} />
           </div>
-          <button type="submit" className="flex items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">
+          <button type="submit" className="flex btn items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">{
+            isLoading ? <PuffLoader size={27} color="#ffffff" /> : 
                 <p className="text-[.813rem] font-bold capitalize text-[#ffffff]">
                   save changes
-                </p>
+                </p>}
               </button>
         </form>
       </BoardBcg>

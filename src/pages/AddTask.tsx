@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import {v4 as uuid} from 'uuid'
 import ModalOverlay from "../components/ui/ModalOverlay";
 import BoardBcg from "../components/ui/BoardBcg";
+import {PuffLoader} from 'react-spinners'
 import { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import useOnclickOutside from "../hooks/useOnclickOutside";
@@ -11,9 +12,11 @@ import cancel from "../assets/icon-cross.svg";
 import {useForm} from 'react-hook-form'
 import SelectRow from "../components/ui/SelectRow";
 import { addNewTask } from "../store/features/boardsSlice";
+import { toast } from "react-toastify";
 
 const AddTask = (): JSX.Element => {
   const {allBoards, selectedBoard} = useAppSelector((store) => store.allBoards)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase())
   const boardColumns = [...new Set(tasksList?.columns.map((item) => item.name))]
   const [formInputs, setFormInputs] = useState<{title:string, description:string, status:string}>({
@@ -70,11 +73,28 @@ const AddTask = (): JSX.Element => {
         isCompleted: boolean;
     }[];
   }
+
+  const dummyFetch = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve('resolved'), 2000)
+    })
+  }
   
-  const onSubmitHandler = ()=> {
-  const subtaskInput = Object.values(subtasksValue).map((subtask) => ({id:uuid(), title:subtask as string, isCompleted:false}))  
-    dispatch(addNewTask({colName:formInputs.status, singleTask:{id:uuid(), title:formInputs.title, description:formInputs.description, status:formInputs.status,subtasks:[...subtaskList]} }))
-    dispatch(closeAddModal())
+  const onSubmitHandler = async() => {
+    try {
+      setIsLoading(true)
+      await dummyFetch()
+      // const subtaskInput = Object.values(subtasksValue).map((subtask) => ({id:uuid(), title:subtask as string, isCompleted:false}))  
+        dispatch(addNewTask({colName:formInputs.status, singleTask:{id:uuid(), title:formInputs.title, description:formInputs.description, status:formInputs.status,subtasks:[...subtaskList]} }))
+        dispatch(closeAddModal())
+        toast.success('Task Added')
+    } catch (error) {
+      console.log(error);
+      
+    }
+    finally {
+      setIsLoading(false)
+    }
   }
   
 
@@ -121,12 +141,12 @@ const AddTask = (): JSX.Element => {
                       className={`input-bordered input w-full  max-w-full border-[#828FA3] bg-transparent py-[.5rem] text-[var(--board-text)] placeholder:text-[.813rem] ${errors[subtask.title.trim().toLowerCase()] ? 'border-[#EA5555] border' : ''}  `}
                       {...register(`${index}`, {required:true, onChange:(e:React.ChangeEvent<HTMLInputElement>) => onSubtaskChange(e, index)})}
                     ></input>
-                    <img src={cancel} onClick={() => removeSubtask(subtask.id)} alt="cancel" />
+                    <img src={cancel} onClick={() => removeSubtask(subtask.id)} className=" cursor-pointer" alt="cancel" />
                   </div>
                   )
                 })}
             
-              <button type="button" onClick={addSubtask} className="flex items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
+              <button type="button" onClick={addSubtask} className="flex btn  items-center justify-center rounded-full bg-[var(--subtasks-btn)] py-[.5rem]">
                 <p className="text-[.813rem] font-bold capitalize text-[#635FC7]">
                   + add new subtask
                 </p>
@@ -139,10 +159,11 @@ const AddTask = (): JSX.Element => {
             </label>
           <SelectRow selectList={boardColumns || ['todo', 'doing', 'done']} value={formInputs.status} name="status" onChange={handleChange} />
           </div>
-          <button type="submit" className="flex items-center justify-center rounded-full bg-[#635FC7] py-[.5rem]">
+          <button type="submit" className="flex items-center btn hover:bg-opacity-50 justify-center rounded-full bg-[#635FC7] py-[.5rem]">
+            {isLoading ? <PuffLoader size={27} color="#ffffff"/> :
                 <p className="text-[.813rem] font-bold capitalize text-[#ffffff]">
                   Create Task
-                </p>
+                </p>}
               </button>
         </form>
       </BoardBcg>

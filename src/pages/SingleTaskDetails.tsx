@@ -41,7 +41,7 @@ const SingleTaskDetails = ({
   const boardColumns = [
     ...new Set(tasksList?.columns.map((item) => item.name)),
   ];
-  const {  isEditModalOpen, isDetailModalOpen } = useAppSelector((store) => store.eventsActions);
+  const {  isEditModalOpen, isDetailModalOpen,editTaskDetails } = useAppSelector((store) => store.eventsActions);
   const overlayRef = useRef(null);
   const editDropdownRef = useRef(null)
   const dispatch = useAppDispatch();
@@ -86,12 +86,12 @@ const SingleTaskDetails = ({
             />
             {showEditDropdown && <div ref={editDropdownRef} className="absolute left-[273px] top-[93px] min-w-[160px] w-full max-w-[192px] rounded-md bg-[var(--edit-dropdown)] p-4 md:left-[353px]">
               <div className="flex flex-col space-y-4">
-                <span className="text-[.813rem] font-[500] text-[#828FA3]" onClick={handleOpenEdit} >
+                <span className="text-[.813rem] cursor-pointer font-[500] text-[#828FA3]" onClick={handleOpenEdit} >
                   Edit Task
                 </span>
                 <span onClick={() => {
                   dispatch(openDeleteTaskModal())
-                }} className="text-[.813rem] font-[500] text-[#EA5555]">
+                }} className="text-[.813rem] cursor-pointer font-[500] text-[#EA5555]">
                   Delete Task
                 </span>
               </div>
@@ -105,13 +105,13 @@ const SingleTaskDetails = ({
           <h4 className="text-[.75rem] font-bold text-[var(--board-text)] ">
             Subtasks({completedSubtasks} of {subtasks.length})
           </h4>
-          <div className="flex flex-col space-y-[.5rem]">
+          <div className="flex flex-col space-y-[.5rem] ">
             {subtasks.map((subtask, index) => {
               const { isCompleted, title } = subtask;
               return (
                 <div
                   key={index}
-                  className="flex items-center space-x-[1rem] bg-[var(--main-bcg)] px-[1rem] py-[.813rem]"
+                  className="flex items-center space-x-[1rem] bg-[var(--main-bcg)] px-[1rem] rounded-md py-[.813rem]"
                 >
                   <Checkbox isChecked={isCompleted} />
                   <p className="text-[.75rem] font-bold text-[var(--subtask-text)]">
