@@ -346,97 +346,7 @@
         {
           "id":503,
           "name": "Todo",
-          "tasks": [
-            {
-              "id":18,
-              "title": "Plan Product Hunt launch",
-              "description": "",
-              "status": "Todo",
-              "subtasks": [
-                {
-                  "id":56,
-                  "title": "Find hunter",
-                  "isCompleted": false
-                },
-                {
-                  "id":57,
-                  "title": "Gather assets",
-                  "isCompleted": false
-                },
-                {
-                  "id":58,
-                  "title": "Draft product page",
-                  "isCompleted": false
-                },
-                {
-                  "id":59,
-                  "title": "Notify customers",
-                  "isCompleted": false
-                },
-                {
-                  "id":60,
-                  "title": "Notify network",
-                  "isCompleted": false
-                },
-                {
-                  "id":61,
-                  "title": "Launch!",
-                  "isCompleted": false
-                }
-              ]
-            },
-            {
-              "id":19,
-              "title": "Share on Show HN",
-              "description": "",
-              "status": "",
-              "subtasks": [
-                {
-                  "id":62,
-                  "title": "Draft out HN post",
-                  "isCompleted": false
-                },
-                {
-                  "id":63,
-                  "title": "Get feedback and refine",
-                  "isCompleted": false
-                },
-                {
-                  "id":64,
-                  "title": "Publish post",
-                  "isCompleted": false
-                }
-              ]
-            },
-            {
-              "id":20,
-              "title": "Write launch article to publish on multiple channels",
-              "description": "",
-              "status": "",
-              "subtasks": [
-                {
-                  "id":65,
-                  "title": "Write article",
-                  "isCompleted": false
-                },
-                {
-                  "id":66,
-                  "title": "Publish on LinkedIn",
-                  "isCompleted": false
-                },
-                {
-                  "id":67,
-                  "title": "Publish on Inndie Hackers",
-                  "isCompleted": false
-                },
-                {
-                  "id":68,
-                  "title": "Publish on Medium",
-                  "isCompleted": false
-                }
-              ]
-            }
-          ]
+          "tasks": []
         },
         {
           "id":504,
@@ -457,31 +367,7 @@
         {
           "id":506,
           "name": "Now",
-          "tasks": [
-            {
-              "id":22,
-              "title": "Review early feedback and plan next steps for roadmap",
-              "description": "Beyond the initial launch, we're keeping the initial roadmap completely empty. This meeting will help us plan out our next steps based on actual customer feedback.",
-              "status": "",
-              "subtasks": [
-                {
-                  "id":71,
-                  "title": "Interview 10 customers",
-                  "isCompleted": false
-                },
-                {
-                  "id":72,
-                  "title": "Review common customer pain points and suggestions",
-                  "isCompleted": false
-                },
-                {
-                  "id":73,
-                  "title": "Outline next steps for our roadmap",
-                  "isCompleted": false
-                }
-              ]
-            }
-          ]
+          "tasks": []
         },
         {
           "id":507,
