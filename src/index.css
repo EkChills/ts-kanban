@@ -42,6 +42,7 @@
   --select-label:#828FA3;
   --placeholder-text:hsl(0,0%, 70%);
   --edit-dropdown:#ffffff;
+  --cancel-btn:rgba(99, 95, 199, 0.1);
 }
 
 .dark-mode {
@@ -64,6 +65,7 @@
   --select-label:#FFFFFF;
   --placeholder-text:hsl(0,0%, 70%);
   --edit-dropdown:#20212C;
+  --cancel-btn:#ffffff;
 }
 
 

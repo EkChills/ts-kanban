@@ -2,10 +2,12 @@ import { useEffect} from 'react'
 import styled from 'styled-components'
 import  ReactDOM  from 'react-dom'
 import AllBoards from './components/AllBoards'
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import { changeTheme } from './store/features/eventActionsSlice'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
+import { ToastContainer } from 'react-toastify';
 import Tasks from './pages/Tasks'
 import { useLocalStorage } from './utils/useLocalStorage'
 import AddNewBoard from './pages/AddNewBoard'
@@ -45,6 +47,7 @@ const App = ():JSX.Element => {
       {isAddBoardModal && ReactDOM.createPortal(<AddNewBoard />, document.getElementById('modal') as Element | DocumentFragment)}
       {isEditBoardModal && ReactDOM.createPortal(<EditBoard />, document.getElementById('modal') as Element | DocumentFragment)}
       <Tasks />
+      <ToastContainer position='top-center' />
     </>
   )
 }

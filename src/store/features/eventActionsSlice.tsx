@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getFromLocalStorage } from "../../utils/localStorage";
 
-type EditTaskDetails= {
+export type EditTaskDetails= {
   id:number | string;
   title:string;
   description:string;
@@ -24,6 +24,8 @@ interface InitialState {
   isEditBoardModal:boolean;
   editTaskDetails:EditTaskDetails
   isAddBoardModal:boolean;
+  isDeleteTaskModalOpen:boolean;
+  isDeleteBoardModalOpen:boolean;
 }
 
 const initialState:InitialState = {
@@ -44,6 +46,8 @@ const initialState:InitialState = {
     title:''
   },
   isAddBoardModal:false,
+  isDeleteBoardModalOpen:false,
+  isDeleteTaskModalOpen:false,
 };
 
 
@@ -84,6 +88,18 @@ const actionsSLice = createSlice({
     },
     openEditModal:(state:InitialState) => {
       state.isEditModalOpen = true
+    },
+    openDeleteTaskModal:(state:InitialState) => {
+      state.isDeleteTaskModalOpen = true
+    },
+    closeDeleteTaskModal:(state:InitialState) => {
+      state.isDeleteTaskModalOpen = false
+    },
+    openDeleteBoardModal:(state:InitialState) => {
+      state.isDeleteBoardModalOpen = true
+    },
+    closeDeleteBoardModal:(state:InitialState) => {
+      state.isDeleteBoardModalOpen = false
     },
     closeEditModal:(state:InitialState) => {
       state.isEditModalOpen = false
@@ -134,6 +150,10 @@ export const {changeTheme, toggleTheme, openNavModal, closeNavModal, openSidebar
   openAddBoardModal,
   closeAddBoardModal,
   openEditBoard,
-  closeEditBoard
+  closeEditBoard,
+  openDeleteBoardModal,
+  openDeleteTaskModal,
+  closeDeleteBoardModal,
+  closeDeleteTaskModal
 } =  actionsSLice.actions
 export default actionsSLice.reducer;

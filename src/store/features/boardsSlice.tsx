@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import boardData from "../../data.json";
 import { getFromLocalStorage } from "../../utils/localStorage";
+import { EditTaskDetails } from "./eventActionsSlice";
 import AllBoards from "../../components/AllBoards";
 
 type AllBoardsType =  {
@@ -151,9 +152,29 @@ const boardSlice = createSlice({
       } else {
         return
       }
-    }
+    },
+    
+    deleteTask: (
+      state: InitialState,
+      { payload}: {payload:EditTaskDetails}
+    ) => {
+      // console.log();
+      
+      const foundBoard = state.allBoards.find(board => board.name.trim().toLowerCase() === state.selectedBoard.toLowerCase().trim())?.
+      columns.find((column) => column.name.trim().toLowerCase() === payload.status.trim().toLowerCase())
+       
+        if(foundBoard) {
+          let NewTasks = [...foundBoard.tasks]
+          NewTasks = NewTasks.filter((task) => task.id !== payload.id)
+          foundBoard.tasks = [...NewTasks]
+          return
+        }
+        console.log('not found');
+        // console.log(state.allBoards);
+
+    },
   },
 });
 
-export const { changeBoard, addNewTask, editTask, addBoard, editBoard, setEditedBoardInfo } = boardSlice.actions;
+export const { changeBoard, addNewTask, editTask, addBoard, editBoard, setEditedBoardInfo, deleteTask } = boardSlice.actions;
 export default boardSlice.reducer;

@@ -7,7 +7,7 @@ import BoardBcg from "../components/ui/BoardBcg";
 import Checkbox from "../components/ui/Checkbox";
 import SelectRow from "../components/ui/SelectRow";
 import useOnclickOutside from "../hooks/useOnclickOutside";
-import { changeEditDetails, closeDetailModal, openEditModal } from "../store/features/eventActionsSlice";
+import { changeEditDetails, closeDetailModal, openDeleteTaskModal, openEditModal } from "../store/features/eventActionsSlice";
 import EditTask from "./EditTask";
 
 interface Props {
@@ -41,7 +41,7 @@ const SingleTaskDetails = ({
   const boardColumns = [
     ...new Set(tasksList?.columns.map((item) => item.name)),
   ];
-  const {  isEditModalOpen } = useAppSelector((store) => store.eventsActions);
+  const {  isEditModalOpen, isDetailModalOpen } = useAppSelector((store) => store.eventsActions);
   const overlayRef = useRef(null);
   const editDropdownRef = useRef(null)
   const dispatch = useAppDispatch();
@@ -63,6 +63,8 @@ const SingleTaskDetails = ({
       title:title
     }))
   },[])
+
+  
 
   return (
     <>
@@ -87,7 +89,9 @@ const SingleTaskDetails = ({
                 <span className="text-[.813rem] font-[500] text-[#828FA3]" onClick={handleOpenEdit} >
                   Edit Task
                 </span>
-                <span className="text-[.813rem] font-[500] text-[#EA5555]">
+                <span onClick={() => {
+                  dispatch(openDeleteTaskModal())
+                }} className="text-[.813rem] font-[500] text-[#EA5555]">
                   Delete Task
                 </span>
               </div>
