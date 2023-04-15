@@ -24,7 +24,7 @@ const DeleteModal = ({deleteFor, taskName, boardName, deleteFunc}:Props) => {
     dispatch(closeDetailModal())
    })
   return (
-    <ModalOverlay>
+    <ModalOverlay className='px-[1rem]'>
     <BoardBcg overlayRef={boardRef} className=' p-[1.5rem]'>
       <div className='flex flex-col space-y-[1.5rem] w-full'>
 
