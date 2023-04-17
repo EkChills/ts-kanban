@@ -32,7 +32,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   allBoards: getFromLocalStorage(boardData.boards, 'allTasks'),
-  selectedBoard: "platform launch",
+  selectedBoard: getFromLocalStorage(boardData.boards, 'allTasks')[0].name  || "platform launch",
   editedBoardInfo:{id:'', name:'', columns:[]}
 
 };
