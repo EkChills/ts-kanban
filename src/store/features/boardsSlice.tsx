@@ -32,7 +32,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   allBoards: getFromLocalStorage(boardData.boards, 'allTasks'),
-  selectedBoard: getFromLocalStorage(boardData.boards, 'allTasks').length > 0 && getFromLocalStorage(boardData.boards, 'allTasks')[0].name  || "platform launch",
+  selectedBoard: getFromLocalStorage(boardData.boards, 'allTasks').length > 0 ? getFromLocalStorage(boardData.boards, 'allTasks')[0].name  : getFromLocalStorage(boardData.boards, 'allTasks').length <= 0 ? 'you have no boards' : "platform launch",
   editedBoardInfo:{id:'', name:'', columns:[]}
 
 };
