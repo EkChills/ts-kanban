@@ -32,7 +32,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   allBoards: getFromLocalStorage(boardData.boards, 'allTasks'),
-  selectedBoard: getFromLocalStorage(boardData.boards, 'allTasks')[0].name  || "platform launch",
+  selectedBoard: getFromLocalStorage(boardData.boards, 'allTasks').length > 0 && getFromLocalStorage(boardData.boards, 'allTasks')[0].name  || "platform launch",
   editedBoardInfo:{id:'', name:'', columns:[]}
 
 };
@@ -130,6 +130,7 @@ const boardSlice = createSlice({
     },
     addBoard:(state:InitialState, {payload}:{payload:BoardColumn}) => {
       state.allBoards = [...state.allBoards, payload]
+      state.selectedBoard = state.allBoards[0].name
     },
     setEditedBoardInfo:(state:InitialState, {payload}:{payload:BoardColumn}) => {
       state.editedBoardInfo = payload
@@ -175,7 +176,15 @@ const boardSlice = createSlice({
     },
     deleteBoard:(state:InitialState, {payload}:{payload:BoardColumn}) => {
       let newBoards = [...state.allBoards]
+      if(newBoards.length == 1 && newBoards[0].id === payload.id) {
+        
+        newBoards = []
+        state.allBoards = newBoards
+        state.selectedBoard = "You have no boards"
+        return
+      }
       newBoards = newBoards.filter((board) => board.id !== payload.id)
+      
       state.allBoards = [...newBoards]
       state.selectedBoard = state.allBoards[0].name
     },

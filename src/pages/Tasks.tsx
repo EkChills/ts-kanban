@@ -9,6 +9,7 @@ import  ReactDOM  from 'react-dom'
 import { useLocalStorage } from '../utils/useLocalStorage'
 import EditTask from './EditTask'
 import AddNewBoard from './AddNewBoard'
+import EmptyColumn from './EmptyColumn'
 
 
 const Tasks = () => {
@@ -22,6 +23,10 @@ const Tasks = () => {
 
   if(colName?.length! <= 0) {
     return <EmptyBoard />
+  }
+
+  if(allBoards.length <= 0) {
+    return <EmptyColumn />
   }
 
   
