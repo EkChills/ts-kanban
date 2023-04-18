@@ -185,6 +185,8 @@ const boardSlice = createSlice({
       }
       newBoards = newBoards.filter((board) => board.id !== payload.id)
       
+      
+      
       state.allBoards = [...newBoards]
       state.selectedBoard = state.allBoards[0].name
     },
