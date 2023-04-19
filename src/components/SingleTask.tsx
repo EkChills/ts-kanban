@@ -1,4 +1,5 @@
 import ReactDOM from 'react-dom';
+import React from 'react';
 import SingleTaskDetails from '../pages/SingleTaskDetails';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { changeModalParam, closeEditModal, openDetailModal } from '../store/features/eventActionsSlice';
@@ -18,12 +19,12 @@ interface Props  {
 const SingleTask = ({id,title, description, status, subtasks}:Props) => {
   const dispatch = useAppDispatch()
   const {isDetailModalOpen,modalParam, isEditModalOpen} = useAppSelector((store) => store.eventsActions)
-  const completedSubtasks = subtasks.reduce((total, item) => {
+  const completedSubtasks = React.useMemo(() => subtasks.reduce((total, item) => {
     if(item.isCompleted === true) {
       return total + 1
     }
     return total
-  }, 0)
+  }, 0), [subtasks])  
 
   const openTaskDetails = () => {
     dispatch(changeModalParam(title))

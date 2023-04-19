@@ -35,7 +35,7 @@ const BoardColumn = ({
     (column) => column.name === colName
   );
   return (
-    <div className="max-w-[260px] w-full min-w-[260px] mb-auto flex flex-col">
+    <div className="max-w-[260px] w-full min-w-[260px] min-h-screen mb-auto flex flex-col">
       <div className="flex items-center mb-[1.5rem] space-x-[.75rem]">
         <span
           className={`w-[15px] h-[15px] rounded-full ${

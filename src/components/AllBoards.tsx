@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks"
 import BoardColumn from "./BoardColumn";
 import { deleteTask, setEditedBoardInfo } from "../store/features/boardsSlice";
@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 
 
-const AllBoards = ():JSX.Element => {
+const AllBoards = React.memo(():JSX.Element => {
   const {allBoards, selectedBoard, editedBoardInfo} = useAppSelector((store) => store.allBoards)
   const {isDeleteTaskModalOpen, editTaskDetails} = useAppSelector((store) => store.eventsActions)
   const tasksList = allBoards.find((board) => board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase()) || allBoards[0]
@@ -38,6 +38,6 @@ const AllBoards = ():JSX.Element => {
       </div>
     )
   
-}
+})
 
 export default AllBoards

@@ -20,7 +20,18 @@
   --subtasks-btn: rgba(99, 95, 199, 0.1);
   --input-border: rgba(130, 143, 163, 0.25);
   --tray-color: #ffffff;
+  scroll-behavior: smooth;
+  scrollbar-width: 0px;
+  scrollbar-color: #000000;
 }
+
+::-webkit-scrollbar {
+  width: 20px;
+  display: none;
+}
+
+
+
 
 .light-mode {
   --board-text-bcg:#ffffff;
