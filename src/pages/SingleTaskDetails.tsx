@@ -9,6 +9,7 @@ import SelectRow from "../components/ui/SelectRow";
 import useOnclickOutside from "../hooks/useOnclickOutside";
 import { changeEditDetails, closeDetailModal, openDeleteTaskModal, openEditModal } from "../store/features/eventActionsSlice";
 import EditTask from "./EditTask";
+import { editTask } from "../store/features/boardsSlice";
 
 interface Props {
   id:number | string
@@ -16,6 +17,7 @@ interface Props {
   description: string;
   status: string;
   subtasks: {
+    id:number | string
     title: string;
     isCompleted: boolean;
   }[];
@@ -34,6 +36,7 @@ const SingleTaskDetails = ({
     (store) => store.allBoards
   );
   const [showEditDropdown, setShowEditDropdown] = useState<boolean>(false);
+  const [isSubtaskChecked, setIsSubtaskChecked] = useState<boolean>(false)
   const tasksList = allBoards.find(
     (board) =>
       board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase()
@@ -62,7 +65,18 @@ const SingleTaskDetails = ({
       subtasks:subtasks,
       title:title
     }))
-  },[])
+  },[isSubtaskChecked])
+
+  const handleSubtaskChange = (e:React.ChangeEvent<HTMLInputElement> ,currentSubtaskIndex:number) => {    
+    const {checked} = e.target
+    setIsSubtaskChecked(checked)
+    let newTs = subtasks.map((sub) => ({id:sub.id, isCompleted:sub.isCompleted, title:sub.title}))
+    const newSubs = [...newTs]
+    newSubs[currentSubtaskIndex].isCompleted = checked
+    
+    dispatch(editTask({id:id,title:title, description:description, status:status, subtasks:[...newSubs]}))
+    
+  }
 
   
 
@@ -111,12 +125,13 @@ const SingleTaskDetails = ({
               return (
                 <div
                   key={index}
-                  className="flex items-center space-x-[1rem] bg-[var(--main-bcg)] px-[1rem] rounded-md py-[.813rem]"
+                  className="flex items-center space-x-[1rem]  bg-[var(--main-bcg)] px-[1rem] rounded-md py-[.813rem]"
                 >
-                  <Checkbox isChecked={isCompleted} />
-                  <p className="text-[.75rem] font-bold text-[var(--subtask-text)]">
+                  <Checkbox isChecked={isCompleted} handleChange={(e:React.ChangeEvent<HTMLInputElement>) => handleSubtaskChange(e, index)} />
+                  <span className="text-[.75rem] relative font-bold text-[var(--subtask-text)]">
                     {title}
-                  </p>
+                  {isCompleted && <div className="absolute left-0 w-full h-[1px] top-1/2 bg-[var(--subtask-text)]"></div>}
+                  </span>
                 </div>
               );
             })}

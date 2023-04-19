@@ -36,7 +36,7 @@ const EditTask = (): JSX.Element => {
     status:boardColumns[0]
   })
   const newArray = Array.from({length:subtasks.length}, (item, index) => '' + 'n' + index)
-  const newArrangedSubtask = subtasks.map((taskItem, index) => ({...taskItem, id:index}))
+  const newArrangedSubtask = subtasks.map((taskItem, index) => ({...taskItem, id:index, }))
   const [subtaskList, setSubtaskList] = useState<typeof newArrangedSubtask>([...newArrangedSubtask])
   const [subtasksValue, setSubtaskValue] = useState({})
   const boardRef = useRef<Element>(null);

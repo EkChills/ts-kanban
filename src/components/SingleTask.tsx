@@ -11,6 +11,7 @@ interface Props  {
   description: string;
   status: string;
   subtasks: {
+      id:number | string
       title: string;
       isCompleted: boolean;
   }[];
