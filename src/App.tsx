@@ -62,7 +62,7 @@ const App = ():JSX.Element => {
       {isEditBoardModal && ReactDOM.createPortal(<EditBoard />, document.getElementById('modal') as Element | DocumentFragment)}
       {isDeleteBoardModalOpen && ReactDOM.createPortal(<DeleteModal deleteFunc={deleteBoardFunc} deleteFor="board" boardName={editedBoardInfo.name} />, document.getElementById('modal') as HTMLElement )}
       <Tasks />
-      <ToastContainer position='top-center' />
+      <ToastContainer position='bottom-right' />
     </>
   )
 }
