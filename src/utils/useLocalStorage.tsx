@@ -25,3 +25,6 @@ export const useLocalStorage = (storageItem:StorageItem, storageString:string) =
     localStorage.setItem(storageString, JSON.stringify(storageItem))
   }, [storageItem])
 }
+
+
+
