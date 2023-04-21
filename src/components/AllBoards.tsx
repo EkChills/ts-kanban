@@ -20,7 +20,7 @@ const AllBoards = React.memo(():JSX.Element => {
 
   useEffect(() => {
     dispatch(setEditedBoardInfo({id:tasksList!.id, name:tasksList!.name, columns:tasksList!.columns}))
-  },[selectedBoard, setEditedBoardInfo])
+  },[selectedBoard, setEditedBoardInfo, tasksList])
 
   const deleteFunc = () => {
     dispatch(closeDeleteTaskModal())

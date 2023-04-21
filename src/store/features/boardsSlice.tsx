@@ -114,7 +114,7 @@ const boardSlice = createSlice({
         if(foundBoard.tasks.includes(checkItemPosition!)){
           const itemPositionIndex = foundBoard.tasks.indexOf(checkItemPosition!)
           foundBoard.tasks.splice(itemPositionIndex,1,payload)
-          console.log('im in ');
+          // console.log('im in ');
           
         } else {
           const filteredColumn = currentBoard?.columns.find((column) => column.tasks.find((item) => item.id == payload.id))
@@ -123,7 +123,6 @@ const boardSlice = createSlice({
           
           foundBoard.tasks = [...foundBoard.tasks, payload]
           // filteredColumns?.filter(col => col.name === payload.status)
-          
         }
         
       }

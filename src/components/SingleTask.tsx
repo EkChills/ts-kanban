@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { changeModalParam, closeEditModal, openDetailModal } from '../store/features/eventActionsSlice';
 import EditTask from '../pages/EditTask';
 
-interface Props  {
+ interface Props  {
   id:number | string;
   title: string;
   description: string;
@@ -31,6 +31,15 @@ const SingleTask = ({id,title, description, status, subtasks}:Props) => {
     dispatch(changeModalParam(title))
     dispatch(openDetailModal())
   }
+
+
+  const dragStartHandler = (e:React.DragEvent<HTMLDivElement>, data:Props) => {
+    e.dataTransfer.setData
+  }
+
+
+
+
   return (
     <div onClick={openTaskDetails} className='min-w-[17.5rem] shadow-md hover:translate-y-1 transition-all duration-200 rounded-lg py-[1.5rem] cursor-pointer px-[1rem] bg-[var(--tasks-bcg)] '>
       <div className='flex flex-col space-y-[.5rem]'>

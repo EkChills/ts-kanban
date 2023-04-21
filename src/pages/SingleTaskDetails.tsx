@@ -37,6 +37,7 @@ const SingleTaskDetails = ({
   );
   const [showEditDropdown, setShowEditDropdown] = useState<boolean>(false);
   const [isSubtaskChecked, setIsSubtaskChecked] = useState<boolean>(false)
+  const [selectValue, setSelectValue] = useState<string>(status)
   const tasksList = allBoards.find(
     (board) =>
       board.name.trim().toLowerCase() === selectedBoard.trim().toLowerCase()
@@ -65,7 +66,7 @@ const SingleTaskDetails = ({
       subtasks:subtasks,
       title:title
     }))
-  },[isSubtaskChecked])
+  },[isSubtaskChecked,selectValue])
 
   const handleSubtaskChange = (e:React.ChangeEvent<HTMLInputElement> ,currentSubtaskIndex:number) => {    
     const {checked} = e.target
@@ -78,6 +79,16 @@ const SingleTaskDetails = ({
     
   }
 
+
+  const handleSelectChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectValue(e.target.value)
+    // dispatch(editTask({id:id,title:title, description:description, status:selectValue, subtasks:subtasks}))
+    // console.log(boardColumns);
+  }
+
+  useEffect(() => {
+     dispatch(editTask({id:id,title:title, description:description, status:selectValue, subtasks:subtasks}))
+  },[selectValue])
   
 
   return (
@@ -141,7 +152,20 @@ const SingleTaskDetails = ({
           <h4 className="text-[.75rem] font-bold text-[var(--select-label)]">
             Status
           </h4>
-          <SelectRow selectedTask={status} selectList={boardColumns} />
+          {/* <SelectRow selectedTask={selectValue} onChange={handleSelectChange} selectList={boardColumns} /> */}
+          <select
+      value={selectValue}
+      onChange={handleSelectChange}
+      className="select-bordered select w-full max-w-full border-[#828FA3] bg-transparent capitalize text-[var(--tasks-text)]"
+    >
+      {boardColumns.map((option, index) => {
+        return (
+          <option  key={index} value={option} >
+            {option}
+          </option>
+        );
+      })}
+    </select>
         </div>
       </BoardBcg>
     </ModalOverlay>
