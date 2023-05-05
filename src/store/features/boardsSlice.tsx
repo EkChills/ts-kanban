@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import boardData from "../../data.json";
-import { getFromLocalStorage } from "../../utils/localStorage";
+import { getFromLocalStorage, getUserFromLocalStorage } from "../../utils/localStorage";
 import { EditTaskDetails } from "./eventActionsSlice";
+import {Unsubscribe, User} from 'firebase/auth'
 import AllBoards from "../../components/AllBoards";
+
+import { auth, isUser } from "../../firebase/firebaseHelpers";
 
 type AllBoardsType =  {
   id:number | string;
@@ -28,14 +31,15 @@ interface InitialState {
   allBoards: AllBoardsType;
   selectedBoard: string;
   editedBoardInfo:BoardColumn;
+  user:User | null;
 }
 
 const initialState: InitialState = {
   allBoards: getFromLocalStorage(boardData.boards, 'allTasks'),
   selectedBoard: getFromLocalStorage(boardData.boards, 'allTasks').length > 0 ? getFromLocalStorage(boardData.boards, 'allTasks')[0].name  : getFromLocalStorage(boardData.boards, 'allTasks').length <= 0 ? 'you have no boards' : "platform launch",
-  editedBoardInfo:{id:'', name:'', columns:[]}
-
-};
+  editedBoardInfo:{id:'', name:'', columns:[]},
+  user:getUserFromLocalStorage()
+}
 
 interface SingleTask {
   id:number | string;
@@ -87,6 +91,9 @@ const boardSlice = createSlice({
   reducers: {
     changeBoard: (state: InitialState, { payload }: { payload: string }) => {
       state.selectedBoard = payload;
+    },
+    changeUser:(state:InitialState, {payload}:{payload:User | null}) => {
+      state.user = payload
     },
     addNewTask: (
       state: InitialState,
@@ -192,5 +199,5 @@ const boardSlice = createSlice({
   },
 });
 
-export const { changeBoard, addNewTask, editTask, addBoard, editBoard, setEditedBoardInfo, deleteTask, deleteBoard } = boardSlice.actions;
+export const { changeBoard, addNewTask, editTask, addBoard, editBoard, setEditedBoardInfo, deleteTask, deleteBoard, changeUser } = boardSlice.actions;
 export default boardSlice.reducer;

@@ -7,12 +7,29 @@ import hideSidebar from '../assets/icon-hide-sidebar.svg'
 import { useRef } from "react";
 import useOnclickOutside from "../hooks/useOnclickOutside";
 import { closeNavModal } from "../store/features/eventActionsSlice";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/firebaseHelpers";
+import { toast } from "react-toastify";
+import { changeUser } from "../store/features/boardsSlice";
+
 
 const NavModal = () => {
   const boardRef = useRef<any>(null)
   const dispatch = useAppDispatch()
-  const { allBoards } = useAppSelector((store) => store.allBoards);
+  const { allBoards,user } = useAppSelector((store) => store.allBoards);
   useOnclickOutside(boardRef, () => dispatch(closeNavModal()))
+  const signOutUser = async() => {
+    try {
+      await signOut(auth)
+      localStorage.removeItem('kanban-user')
+      toast.success('Logout successful')
+      dispatch(changeUser(null))
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
   return (
     <Wrapper
     ref={boardRef}
@@ -26,6 +43,14 @@ const NavModal = () => {
           <BoardOption key={index} boardName={board.name} />
         ))}
         <CreateBoard />
+      </div>
+      <div className="pl-[1.5rem] mt-auto flex items-center space-x-2">
+      <div className="w-[3rem] h-[3rem] rounded-full cursor-pointer flex items-center justify-center bg-[#635FC7] text-white text-[1.5rem] font-bold border-2 border-white">
+        <p>{user?.email?.substring(0,2)}</p>
+      </div>
+          <button onClick={signOutUser} className="btn bg-[#635FC7] flex items-center justify-center text-[1rem] font-bold text-white">
+            Sign Out
+          </button>
       </div>
       <div className="flex md:absolute md:bottom-[6rem] md:flex-col md:space-y-8 md:w-full">
         <ToggleTheme />

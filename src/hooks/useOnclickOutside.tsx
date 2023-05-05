@@ -5,7 +5,9 @@ const useOnclickOutside = (refObj:RefObject<any>, closeAction:(e:Event) => void)
   useEffect(() => {
    const handler = (event:Event) => {
      const el = refObj?.current
-     if(!el || el.contains(event.target as Node) || null) {
+     console.log(el);
+     
+     if(!el || el.contains(event.target as Node) || null) {      
        return
      }
      closeAction(event)
